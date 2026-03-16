@@ -46,3 +46,20 @@ std::vector<LineSegment> find_segments(const std::vector<Point> points) {
   }
 
   return segments;
+}
+
+void cal_slope(std::size_t with_this, const std::vector<Point> points,
+               std::vector<Slope> &slopes) {
+  std::size_t size{points.size()};
+
+  if (slopes.size() != size) {
+    slopes.resize(size);
+  }
+
+  for (std::size_t i{}; i < size; ++i) {
+    slopes[i].numerator = points[i].y - points[with_this].y;
+    slopes[i].denominator = points[i].x - points[with_this].x;
+    slopes[i].index = i; // we will this index for referencing after we sort the
+    // array.
+  }
+}
