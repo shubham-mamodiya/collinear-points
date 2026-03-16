@@ -33,3 +33,16 @@ bool operator==(const Point &p1, const Point &p2) {
 
 bool operator!=(const Point &p1, const Point &p2) {
   return p1.x != p2.x && p1.y != p2.y;
+}
+
+std::vector<LineSegment> find_segments(const std::vector<Point> points) {
+  std::size_t size{points.size()};
+  std::vector<LineSegment> segments{};
+  std::vector<Slope> slopes;
+  for (std::size_t i{}; i < size; ++i) {
+    cal_slope(i, points, slopes);
+    merge_sort(slopes);
+    auto occ = occurences(slopes);
+  }
+
+  return segments;
