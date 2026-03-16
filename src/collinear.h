@@ -14,3 +14,21 @@ public:
   friend bool operator==(const Point &p1, const Point &p2);
   friend bool operator!=(const Point &p1, const Point &p2);
 };
+
+class Slope {
+public:
+  int numerator{};
+  int denominator{};
+  std::size_t index{}; // for referencing index to some array.
+  // just to save some cost when sorting. It will tell the
+  // index of the point in actual points array.
+
+  Slope() = default;
+
+  Slope(int &numerator, int &denominator)
+      : numerator{numerator}, denominator{denominator} {}
+
+  friend bool operator==(const Slope &a, const Slope &b);
+  friend bool operator<(const Slope &a, const Slope &b);
+  friend bool operator>(const Slope &a, const Slope &b);
+};
