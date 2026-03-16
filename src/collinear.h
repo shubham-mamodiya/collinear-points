@@ -32,3 +32,12 @@ public:
   friend bool operator<(const Slope &a, const Slope &b);
   friend bool operator>(const Slope &a, const Slope &b);
 };
+
+class LineSegment {
+public:
+  Point a{};
+  Point b{};
+};
+
+std::istream &operator>>(std::istream &in, Point &p);
+std::ostream &operator<<(std::ostream &out, const Point &p);
