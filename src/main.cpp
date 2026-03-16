@@ -29,3 +29,19 @@ std::vector<Point> read_points(const std::filesystem::path &path) {
   }
 
   return points;
+}
+
+int main(int argc, char *argv[]) {
+  if (argc != 3) {
+    std::cerr
+        << "Usage [.Executable] [data file path] [result file location]\n";
+    return 3;
+  }
+
+  std::filesystem::path input_file{argv[1]};
+  auto points{read_points(input_file)};
+
+  [[maybe_unused]] std::vector<LineSegment> seg = find_segments(points);
+
+  return 0;
+}
