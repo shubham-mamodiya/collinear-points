@@ -41,7 +41,12 @@ int main(int argc, char *argv[]) {
   std::filesystem::path input_file{argv[1]};
   auto points{read_points(input_file)};
 
-  [[maybe_unused]] std::vector<LineSegment> seg = find_segments(points);
+  [[maybe_unused]] auto seg = find_segments(points);
+
+  for (std::size_t i{}; i < seg.size(); ++i) {
+    std::cout << "( " << seg[i].a.x << " , " << seg[i].a.y << " ) --> " << "( "
+              << seg[i].a.x << " , " << seg[i].a.y << " )\n";
+  }
 
   return 0;
 }
