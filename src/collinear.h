@@ -13,6 +13,7 @@ public:
 
   friend bool operator==(const Point &p1, const Point &p2);
   friend bool operator!=(const Point &p1, const Point &p2);
+  friend bool operator<(const Point &p1, const Point &p2);
 };
 
 class Slope {
@@ -31,6 +32,7 @@ public:
   friend bool operator==(const Slope &a, const Slope &b);
   friend bool operator<(const Slope &a, const Slope &b);
   friend bool operator>(const Slope &a, const Slope &b);
+  friend bool operator>(const Point &p1, const Point &p2);
 };
 
 class LineSegment {
@@ -42,11 +44,6 @@ public:
 std::istream &operator>>(std::istream &in, Point &p);
 std::ostream &operator<<(std::ostream &out, const Point &p);
 
-std::vector<LineSegment> find_segments(const std::vector<Point> points);
-
-void cal_slope(std::size_t with_this, const std::vector<Point> points,
-               std::vector<Slope> &slopes);
-
 void merge_sort(std::vector<Slope> &slopes);
 
 void sort(int lo, int hi, std::vector<Slope> &arr, std::vector<Slope> &aux);
@@ -54,8 +51,11 @@ void sort(int lo, int hi, std::vector<Slope> &arr, std::vector<Slope> &aux);
 void merge(int lo, int mid, int hi, std::vector<Slope> &arr,
            std::vector<Slope> &aux);
 
-std::vector<LineSegment> find_segments(const std::vector<Point> points);
+std::vector<LineSegment> find_segments(const std::vector<Point> &points);
 
-void cal_slope(std::size_t with_this, const std::vector<Point> points,
+void cal_slope(std::size_t with_this, const std::vector<Point> &points,
                std::vector<Slope> &slopes);
-std::vector<std::size_t> occurences(const std::vector<Slope> &slopes);
+
+std::vector<LineSegment> occurences(const Point &origin_point,
+                                    const std::vector<Slope> &slopes,
+                                    const std::vector<Point> &points);
