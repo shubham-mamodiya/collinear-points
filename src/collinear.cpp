@@ -61,7 +61,9 @@ bool operator>(const Point &p1, const Point &p2) {
 std::vector<LineSegment> find_segments(const std::vector<Point> &points) {
   std::size_t size{points.size()};
   std::vector<LineSegment> segments{};
-  std::vector<Slope> slopes{};
+  // exclude the origin
+  std::vector<Slope> slopes(points.size() - 1);
+
   for (std::size_t i{}; i < size; ++i) {
     cal_slope(i, points, slopes);
     merge_sort(slopes);
@@ -76,15 +78,19 @@ void cal_slope(std::size_t with_this, const std::vector<Point> &points,
                std::vector<Slope> &slopes) {
   std::size_t size{points.size()};
 
-  if (slopes.size() != size) {
+  if (slopes.size() != size - 1) {
     slopes.resize(size);
   }
-
+  std::size_t j{};
   for (std::size_t i{}; i < size; ++i) {
-    slopes[i].numerator = points[i].y - points[with_this].y;
-    slopes[i].denominator = points[i].x - points[with_this].x;
-    slopes[i].index = i; // we will this index for referencing after we sort the
+    if (i == with_this) {
+      continue; // for the origin point
+    }
+    slopes[j].numerator = points[i].y - points[with_this].y;
+    slopes[j].denominator = points[i].x - points[with_this].x;
+    slopes[j].index = i; // we will this index for referencing after we sort the
     // array.
+    ++j;
   }
 }
 
