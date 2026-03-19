@@ -67,7 +67,7 @@ std::vector<LineSegment> find_segments(const std::vector<Point> &points) {
   for (std::size_t i{}; i < size; ++i) {
     cal_slope(i, points, slopes);
     merge_sort(slopes);
-    auto temp{occurences(points[i], slopes, points)};
+    auto temp{occurrences(points[i], slopes, points)};
 
     segments.insert(segments.end(), temp.begin(), temp.end());
   }
@@ -153,9 +153,9 @@ void merge(int lo, int mid, int hi, std::vector<Slope> &arr,
   }
 }
 
-std::vector<LineSegment> occurences(const Point &origin_point,
-                                    const std::vector<Slope> &slopes,
-                                    const std::vector<Point> &points) {
+std::vector<LineSegment> occurrences(const Point &origin_point,
+                                     const std::vector<Slope> &slopes,
+                                     const std::vector<Point> &points) {
   std::size_t size{slopes.size()};
   std::vector<LineSegment> results{};
   if (size <= 1) {

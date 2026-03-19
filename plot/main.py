@@ -17,7 +17,7 @@ def main() -> None:
 
     _, ax = plt.subplots()
 
-    ax.scatter(points["x"], points["y"], marker="x", label="points")
+    ax.scatter(points["x"], points["y"], marker=".", label="points")
 
     for _, row in segments.iterrows():
         ax.plot([row["x1"], row["x2"]], [row["y1"], row["y2"]])
