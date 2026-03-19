@@ -17,15 +17,21 @@ std::ostream &operator<<(std::ostream &out, const Point &p) {
 bool operator==(const Slope &a, const Slope &b) {
   return a.numerator * b.denominator == b.numerator * a.denominator;
 }
-
 bool operator<(const Slope &a, const Slope &b) {
-  return (__int128)a.numerator * b.denominator <
-         (__int128)b.numerator * a.denominator;
+  __int128 diff_num = (__int128)a.numerator * b.denominator -
+                      (__int128)b.numerator * a.denominator;
+  __int128 denom_product = (__int128)a.denominator * b.denominator;
+  // sign(diff_num / denom_product) < 0
+  // i.e. diff_num and denom_product have opposite signs
+  return (diff_num < 0) != (denom_product < 0);
 }
 
 bool operator>(const Slope &a, const Slope &b) {
-  return (__int128)a.numerator * b.denominator >
-         (__int128)b.numerator * a.denominator;
+  __int128 diff_num = (__int128)a.numerator * b.denominator -
+                      (__int128)b.numerator * a.denominator;
+  __int128 denom_product = (__int128)a.denominator * b.denominator;
+  // same signs → positive result → a/b > c/d
+  return (diff_num < 0) == (denom_product < 0) && diff_num != 0;
 }
 
 bool operator==(const Point &p1, const Point &p2) {
@@ -33,7 +39,7 @@ bool operator==(const Point &p1, const Point &p2) {
 }
 
 bool operator!=(const Point &p1, const Point &p2) {
-  return p1.x != p2.x && p1.y != p2.y;
+  return p1.x != p2.x || p1.y != p2.y;
 }
 
 bool operator<(const Point &p1, const Point &p2) {
@@ -168,11 +174,9 @@ std::vector<LineSegment> occurences(const Point &origin_point,
       std::size_t x{slopes[i - 1].index};
       std::size_t y{slopes[i].index};
 
-      smallest_point = std::min(smallest_point, points[x]);
-      smallest_point = std::min(smallest_point, points[y]);
+      smallest_point = std::min(points[x], std::min(points[y], origin_point));
+      biggest_point = std::max(points[x], std::max(points[y], origin_point));
 
-      biggest_point = std::max(biggest_point, points[x]);
-      biggest_point = std::max(biggest_point, points[y]);
       continue;
     }
 
@@ -186,7 +190,6 @@ std::vector<LineSegment> occurences(const Point &origin_point,
     smallest_point = origin_point;
     biggest_point = origin_point;
   }
-
   if (newly_found >= minimum_limit) {
     if (smallest_point != biggest_point) {
       results.push_back({smallest_point, biggest_point});

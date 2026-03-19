@@ -1,3 +1,4 @@
+#include <cstddef>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -31,6 +32,30 @@ std::vector<Point> read_points(const std::filesystem::path &path) {
   return points;
 }
 
+void write_points_csv(const std::filesystem::path &path,
+                      const std::vector<LineSegment> &seg) {
+  char permition{'n'};
+  if (std::filesystem::exists(path)) {
+    std::cout << path.string()
+              << " already exists.\n\tDo you want to override it: ";
+    std::cin >> permition;
+    if (permition != 'y' && permition != 'Y') {
+      std::cout << "We are not overriding it.";
+      return;
+    }
+  }
+  std::ofstream file{path};
+
+  const std::size_t size{seg.size()};
+
+  for (std::size_t i{}; i < size; ++i) {
+    auto segment = seg[i];
+    auto a = segment.a;
+    auto b = segment.b;
+    file << a.x << " , " << a.y << " , " << b.x << " , " << b.y << "\n";
+  }
+}
+
 int main(int argc, char *argv[]) {
   if (argc != 3) {
     std::cerr
@@ -42,11 +67,6 @@ int main(int argc, char *argv[]) {
   auto points{read_points(input_file)};
 
   [[maybe_unused]] auto seg = find_segments(points);
-
-  for (std::size_t i{}; i < seg.size(); ++i) {
-    std::cout << "( " << seg[i].a.x << " , " << seg[i].a.y << " ) --> " << "( "
-              << seg[i].a.x << " , " << seg[i].a.y << " )\n";
-  }
-
+  write_points_csv(argv[2], seg);
   return 0;
 }
