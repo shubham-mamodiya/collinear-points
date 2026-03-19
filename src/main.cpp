@@ -32,19 +32,23 @@ std::vector<Point> read_points(const std::filesystem::path &path) {
   return points;
 }
 
-void write_points_csv(const std::filesystem::path &path,
-                      const std::vector<LineSegment> &seg) {
+void write_segments_csv(const std::filesystem::path &path,
+                        const std::vector<LineSegment> &seg) {
   char permition{'n'};
   if (std::filesystem::exists(path)) {
     std::cout << path.string()
               << " already exists.\n\tDo you want to override it: ";
     std::cin >> permition;
     if (permition != 'y' && permition != 'Y') {
-      std::cout << "We are not overriding it.";
+      std::cout << "We are not overriding it.\n";
       return;
     }
   }
   std::ofstream file{path};
+  if (!file) {
+    std::cerr << "Cat write to the file.\n";
+    return;
+  }
 
   const std::size_t size{seg.size()};
 
@@ -56,17 +60,40 @@ void write_points_csv(const std::filesystem::path &path,
   }
 }
 
+// so I can just use pandas to read points
+void convert_to_csv(const std::filesystem::path &path) {
+  std::ifstream input{path};
+
+  std::filesystem::path output_path{path};
+  output_path.replace_extension(".csv");
+  std::ofstream output{output_path};
+
+  if (!output || !input) {
+    std::cerr << "Cat write to the file.\n";
+    return;
+  }
+
+  int temp{};
+  input >> temp;
+
+  int x{}, y{};
+  while (input >> x >> y) {
+    output << x << " , " << y << "\n";
+  }
+}
+
 int main(int argc, char *argv[]) {
   if (argc != 3) {
     std::cerr
         << "Usage [.Executable] [data file path] [result file location]\n";
     return 3;
   }
-
-  std::filesystem::path input_file{argv[1]};
+  auto input_path{argv[1]};
+  auto output_path{argv[2]};
+  std::filesystem::path input_file{input_path};
   auto points{read_points(input_file)};
-
+  convert_to_csv(input_path);
   [[maybe_unused]] auto seg = find_segments(points);
-  write_points_csv(argv[2], seg);
+  write_segments_csv(output_path, seg);
   return 0;
 }
